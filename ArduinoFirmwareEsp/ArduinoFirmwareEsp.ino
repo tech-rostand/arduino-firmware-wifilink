@@ -20,6 +20,9 @@ ESP8266WebServer server(80);    //server UI
 
 void setup() {
 
+  ESP.wdtDisable();
+  resetMCU(); // reset of the MCU to be in sync after watchdog reset
+
   #if defined(ESP_CH_UART)
   _setup_dfu();
   #endif
@@ -38,6 +41,8 @@ void setup() {
 }
 
 void loop() {
+
+  ESP.wdtFeed();
 
   ArduinoOTA.handle();
   CommunicationLogic.handle();
@@ -137,3 +142,20 @@ void setWiFiConfig(){
   #endif
 
 }
+
+void resetMCU() {
+#if defined(UNOWIFIDEVED)
+  pinMode(4, OUTPUT);
+  digitalWrite(4, 1);
+#if defined(UNOWIFIDEVED_STRAIGHT_SERIAL)
+  delay(1);
+  digitalWrite(4, 0);
+#endif
+  pinMode(12, OUTPUT);
+  digitalWrite(12, 0);
+  delay(1);
+  digitalWrite(12, 1);
+  delay(200);
+#endif
+}
+
