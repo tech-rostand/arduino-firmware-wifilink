@@ -1,3 +1,5 @@
+#include "config.h"
+
 #if defined(ESP_CH_UART)
 
 #include <dfu.h>
@@ -7,7 +9,6 @@
 #include <dfu-internal.h>
 #include <esp8266-serial.h>
 #include <dfu-esp8266.h>
-#include <dfu-avrisp.h>
 #if defined(STAROTTO)
 #include <dfu-stm32.h>
 #elif defined(UNOWIFIDEVED)
@@ -84,9 +85,14 @@ void _handle_Mcu_OTA(void)
     case DFU_ALL_DONE:
       dfu_target_go(global_dfu);
       _finalize_dfu();
+    #if defined(UNOWIFIDEVED)
+      delay(1000);
+      ESP.reset();
+    #else
       delay(80);
       //open Serial Communication
       Serial.begin(BAUDRATE_COMMUNICATION);
+    #endif
       break;
     case DFU_CONTINUE:
       break;
