@@ -54,6 +54,8 @@ With IDE 1.8.x the library for the AVR side of this firmware is “Arduino Uno WiF
 
 This firmware can be installed or reinstalled with [firmware updater with GUI](http://www.arduino.org/learning/tutorials/advanced-guides/arduino-uno-wifi-firmware-updater).
 
+[Source code GitHub repository](https://github.com/arduino-org/Esp-Link)
+
 ### ESP-link
 
 Then version of ESP-link was used for the preinstalled firmware. JeeLabs develops the ESP-link further and it is compatible with Uno WiFi Developer Edition, except of sketch OTA upload.
