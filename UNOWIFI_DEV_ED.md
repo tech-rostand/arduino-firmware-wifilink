@@ -1,4 +1,19 @@
-
+# Content
+ * [Arduino Uno WiFi Developer Edition](#arduino-uno-wifi-developer-edition) 
+    * [Hardware](#hardware)
+    * [Firmware](#firmware)
+        * [Preparing for flashing](#preparing-for-flashing)
+        * [esptool](#esptool)
+        * [Firmware as a sketch](#firmware-as-a-sketch)
+ * [ESP8266 Firmwares overview](#esp8266-firmwares-overview)
+     * [Uno WiFi Developer Edition factory firmware](#uno-wifi-developer-edition-factory-firmware)
+     * [ESP-link](#esp-link)
+     * [WiFi Link](#wifi-link)
+     * [SDK firmware](#sdk-firmware)
+ * [Pin 4](#pin-4)
+ * [WiFi Link firmware](#wifi-link-firmware)
+     * [Initial serial flashing](#initial-serial-flashing)
+ 
 # Arduino Uno WiFi Developer Edition 
 
 ## Hardware
@@ -26,7 +41,7 @@ The firmware can be updated or changed. Two things are necessary to prepare Uno 
 1. First step is bridging the USB serial of the AVR microcontroller to ESP8266 serial pins. It is a software thing. A simple sketch called EspRecovery.
 2. Second step is to put the ESP8266 into so called DFU mode pushing a dedicated button while powering the board on.  
 
-These step are described in detail and with pictures in [Uno Wifi Dev Ed documentation](http://www.arduino.org/learning/tutorials/advanced-guides/how-to-change-the-firmware-on-an-arduino-uno-wifi).
+These steps are described in detail and with pictures in [Uno Wifi Dev Ed documentation](http://www.arduino.org/learning/tutorials/advanced-guides/how-to-change-the-firmware-on-an-arduino-uno-wifi).
 
 ### esptool
 
@@ -46,7 +61,7 @@ ESP8266 is supported in Arduino IDE with Arduino esp8266 core. It means that ard
 
 ## ESP8266 Firmwares overview
 
-### Uno WiFi Developer Edition preinstalled firmware
+### Uno WiFi Developer Edition factory firmware
 
 The Arduino.org team did use a JeeLabs ESP-link fork (source code copy) with minor changes for the firmware of the Uno WiFi Developer Edition. They changed the design to Arduino and made sketch OTA upload work activating pin 4 before writing the sketch’s binary to AVR.
 
@@ -76,13 +91,13 @@ The corresponding library is WiFi Link and it has a familiar API similar to WiFi
 * [WiFi Link firmware GitHub repository](https://github.com/arduino-org/arduino-firmware-wifilink)
 * [WiFi Link library GitHub repository](https://github.com/arduino-org/arduino-library-wifilink)
 
-## ESP8266 SDK firmware
+### SDK firmware
 
 Theoretically it should work. It receives AT commands over serial line.
 
 The AVR side must use SC16IS750 like other Uno WiFi libraries or the firmware must be modified to put pin 4 LOW for using direct serial connection. Possible library is WifiEsp. 
 
-# Pin 4
+## Pin 4
 
 Pin GPIO4 of the ESP8266 is on Uno WiFi Dev Ed connected to an electronic switch which opens the direct serial communication between ATmega328 and ESP8266.
 
@@ -94,5 +109,34 @@ With the serial of AVR connected to ESP8266 it can’t be used for USB sketch uplo
 
 Alternative to uploading sketch over USB is OTA upload. Alternative to Serial Monitor is Telnet.
 
+# WiFi Link firmware
 
+## Initial serial flashing
 
+The GitHub repository of the WiFi Link firmware contains [binaries of version 1.0.0](https://github.com/arduino-org/arduino-firmware-wifilink/releases/tag/1.0.0). There are two files:
+
+* `ArduinoFirmwareWiFiLink-UNO_WIFI_DEV_ED-1.0.0.bin` - to write from address 0, contains bootloader and the firmware functions. 
+* `ArduinoFirmwareWiFiLink-WEB_PANEL-1.0.0.bin` - to write from flash address 0x300000. It is an image of ESP file system SPIFFS, containing static file for the Web Panel. The file is 1 MB big.
+
+For flashing you need the esptool. You can use the python script or if you installed "Arduino Uno WiFi Dev Ed Library", then you can use packaged esptool from tools/UnoWiFi/tool/bin in your sketches folder Arduino/.
+
+If you didn't install the "Arduino Uno WiFi Dev Ed Library", install the WiFi Link library. You will need the EspRecovery sketch from examples of one of these libraries.
+
+1. Create a folder ArduinoFirmwareWiFiLink in tools subfolder of your sketches folder (Arduino/tools). 
+2. Download the release 1.0.0 .bin files into folder Arduino/tools/ArduinoFirmwareWiFiLink
+3. In Arduino IDE open the sketch EspRecovery from Examples of "Arduino Uno WiFi Dev Ed Library" or WiFi Link library
+4. Connect the board and upload the EspRecovery sketch
+5. Put the ESP on Uno WiFi into DFU mode - disconnect the board from power and then hold the DFU button while connecting the USB cable. This step is described in detail and with pictures in [Uno Wifi Dev Ed documentation](http://www.arduino.org/learning/tutorials/advanced-guides/how-to-change-the-firmware-on-an-arduino-uno-wifi).
+6. open the command line and go to folder Arduino/tools/ArduinoFirmwareWiFiLink. (on Windows `cd %USERPROFILE%\Documents\Arduino\tools\ArduinoFirmwareWiFiLink`)
+7. execute esptool with parameters. The first parameter -p should be the serial port where the Arduino is connected. All other parameters are the same for all setups: `-b 9600 write_flash -ff 80m -fm qio -fs 32m 0x000000 ArduinoFirmwareWiFiLink-UNO_WIFI_DEV_ED-1.0.0.bin 0x300000 ArduinoFirmwareWiFiLink-WEB_PANEL-1.0.0.bin`
+
+Windows example with "Arduino Uno WiFi Dev Ed Library" esptool:
+```
+C:\Users\Duro\Documents\Arduino\tools\ArduinoFirmwareWiFiLink>..\UnoWiFi\tool\bin\esptool-windows -p COM4: -b 9600 write_flash -ff 80m -fm qio -fs 32m 0x000000 ArduinoFirmwareWiFiLink-UNO_WIFI_DEV_ED-1.0.0.bin 0x300000 ArduinoFirmwareWiFiLink-WEB_PANEL-1.0.0.bin 
+```
+
+It takes to 20 minutes to write the bin files at 9600 baud. Limitation is the connection between microcontroller and ESP8266 over IO expander. 
+
+After successful flashing of the firmware you can connect to AP created by the ESP8266 and setup the connection to your WiFi network. The process is very **similar** to [first configuration with factory firmware](http://www.arduino.org/learning/getting-started/getting-started-with-arduino-uno-wifi#First_Configuration).
+
+Use [WiFi Link library](https://github.com/arduino-org/arduino-library-wifilink) in sketches.
