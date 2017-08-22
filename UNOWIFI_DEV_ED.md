@@ -187,8 +187,6 @@ Now verify the sketch with the Verify button. The first compilation after changi
 
 From now on always check the selected board in the right bottom corner of the IDE window. For AVR sketch it should show "Arduino Uno Wifi on ...", for the ESP sketch "Arduino, Uno WiFi, 9600, 4M (1MB SPIFFS) on...".
 
-If you run two instances of the IDE, they can have different boards selected. The last one is remembered on exit from the IDE. 
-
 ### OTA upload 
 
 The WiFi Link firmware supports OTA upload of new version of the firmware binary. OTA upload will only work if some version of WiFi Link is working in the ESP8266 of your Uno WiFi Dev Ed and is configured to STA or STA+AP mode.
@@ -201,6 +199,8 @@ The upload of the ArduinoFirmwareEsp.ino will overwrite the bootloader+firmware 
 
 ### Serial upload
 
+**Skip this if OTA upload works.**
+ 
 For the serial upload you must prepare the board with EspRecovery sketch and DFU mode. 
 
 Choose the serial port in Tools menu Port and try to upload with the Upload button, but it is possible it ends with an error.
@@ -239,8 +239,8 @@ With serial port you must use EspRecovery sketch and put the board in DFU mode. 
 
 Flashing the SPIFFS erases the WiFi settings made in Web Panel and the board starts in AP mode.
 
-## config.json
+### config.json
 
 WiFi Link firmware writes WiFi settings into SPIFFS file config.json. SPIFFS upload overrides the SPIFFS content and the setting are lost. After restart WiFi Link firmware goes to AP mode and you must once again connect to this AP, choose the WiFi network, enter the password and connect back to your WiFi. 
 
-If you often upload the SPIFFS, add your config.json file into data subfolder of the WiFi Link firmware source codes. The basic content is {"ssid":"mywifi","password":"abcd1234"}. 
+If you often upload the SPIFFS, add your config.json file into data subfolder of the WiFi Link firmware source codes. The basic content is `{"ssid":"yourwifi","password":"yourpassword"}.` 
