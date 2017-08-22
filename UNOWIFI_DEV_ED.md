@@ -13,6 +13,13 @@
  * [Pin 4](#pin-4)
  * [WiFi Link firmware](#wifi-link-firmware)
      * [Initial serial flashing](#initial-serial-flashing)
+     * [Building from source code](#building-from-source-code)
+       * [Install esp8266 packages](#install-esp8266-packages)
+       * [Download the source code](#download-the-source-code)
+       * [Board selection and Verify](#board-selection-and-verify)
+       * [OTA upload](#ota-upload)
+       * [Serial upload](#serial-upload)
+       * [SPIFFS](#spiffs)
  
 # Arduino Uno WiFi Developer Edition 
 
@@ -140,3 +147,100 @@ It takes to 20 minutes to write the bin files at 9600 baud. Limitation is the co
 After successful flashing of the firmware you can connect to AP created by the ESP8266 and setup the connection to your WiFi network. The process is very **similar** to [first configuration with factory firmware](http://www.arduino.org/learning/getting-started/getting-started-with-arduino-uno-wifi#First_Configuration).
 
 Use [WiFi Link library](https://github.com/arduino-org/arduino-library-wifilink) in sketches.
+
+## Building from source code
+
+The WiFi Link firmware is an Arduino sketch so you can build it in Arduino IDE and upload it to ESP from Arduino IDE. There is no need for some linux toolchains like is the case with other ESP firmwares.
+
+Building WiFi Link firmware from source files gives you possibility to build the newest version, build a branch version, build some fork version or change something in source code you need.
+
+### Install esp8266 packages
+
+Arduino Uno Wifi Dev Ed is supported from version 2.4 of the esp8266 core for Arduino IDE. For now, the version 2.4 is only a release candidate.
+
+To install this pre-release using boards manager, follow the [instructions](https://github.com/esp8266/Arduino#installing-with-boards-manager), with the package URL replaced with the following one:
+```
+https://github.com/esp8266/Arduino/releases/download/2.4.0-rc1/package_esp8266com_index.json
+```
+
+Additionally, install the [Arduino ESP8266 filesystem uploader IDE plugin](https://github.com/esp8266/arduino-esp8266fs-plugin#arduino-esp8266-filesystem-uploader-)
+
+### Download the source code
+
+For start use the source code from the [master repository from Arduino.org](https://github.com/arduino-org/arduino-firmware-wifilink). Every GitHub repository has a green "Clone or download" button which opens a small menu. Choose "Download ZIP".
+
+Open or extract the downloaded zip and copy the folder ArduinoFirmwareEsp from zip to your sketches folder.
+
+Start Arduino IDE and open the ArduinoFirmwareEsp.ino sketch. It opens additional files as tabs in IDE.
+
+**Go to config.h tab and uncomment `#define UNOWIFIDEVED`.**
+
+### Board selection and Verify
+
+In tools menu select board options. 
+
+1. Choose Arduino from the ESP8266 section of the Boards menu. 
+2. Next choose Model Uno Wifi. 
+3. Flash Size selection should be "4M (1M SPIFFS)"  
+
+Now verify the sketch with the Verify button. The first compilation after changing the board will take time.
+
+From now on always check the selected board in the right bottom corner of the IDE window. For AVR sketch it should show "Arduino Uno Wifi on ...", for the ESP sketch "Arduino, Uno WiFi, 9600, 4M (1MB SPIFFS) on...".
+
+If you run two instances of the IDE, they can have different boards selected. The last one is remembered on exit from the IDE. 
+
+### OTA upload 
+
+The WiFi Link firmware supports OTA upload of new version of the firmware binary. OTA upload will only work if some version of WiFi Link is working in the ESP8266 of your Uno WiFi Dev Ed and is configured to STA or STA+AP mode.
+
+After configuring the board to WiFi STA or STA+AP mode, the IDE will detect your board on network using mdns. The network 'port' will be accessible in Port submenu of Tools menu. Choose the network port for the OTA upload and use the Upload button in IDE.
+
+The upload of the ArduinoFirmwareEsp.ino will overwrite the bootloader+firmware binary at address 0x0 and leave the SPIFFS part of the flash unchanged.
+
+*Notes: Do not put the board in DFU mode. Do not search for some special programmer in Tools menu.*
+
+### Serial upload
+
+For the serial upload you must prepare the board with EspRecovery sketch and DFU mode. 
+
+Choose the serial port in Tools menu Port and try to upload with the Upload button, but it is possible it ends with an error.
+
+Other option is to use command "Export compiled binary" from Sketch menu. It creates file named ArduinoFirmwareEsp.ino.arduino_uart.bin in sketch source code folder Arduino/ArduinoFirmwareEsp.
+
+To flash with esptool:
+1. Create a folder ArduinoFirmwareWiFiLink in tools subfolder of your sketches folder (Arduino/tools), if it doesn't exist.
+2. move Arduino/ArduinoFirmwareEsp/ArduinoFirmwareEsp.ino.arduino_uart.bin to Arduino/tools/ArduinoFirmwareWiFiLink
+3. In Arduino IDE open the sketch EspRecovery from Examples of "Arduino Uno WiFi Dev Ed Library" or WiFi Link library
+4. Connect the board and upload the EspRecovery sketch (don't forget to set the board to Arduino Uno Wifi)
+5. Put the ESP on Uno WiFi into DFU mode - disconnect the board from power and then hold the DFU button while connecting the USB cable.
+6. open the command line and go to folder Arduino/tools/ArduinoFirmwareWiFiLink. (on Windows `cd %USERPROFILE%\Documents\Arduino\tools\ArduinoFirmwareWiFiLink`)
+7. execute esptool with parameters. The first parameter -p should be the serial port where the Arduino is connected. All other parameters are the same for all setups: `-b 9600 write_flash -ff 80m -fm qio -fs 32m 0x000000 ArduinoFirmwareEsp.ino.arduino_uart.bin`
+
+The procedure is basically the same as described in "Initial serial flashing". The name of the bin file is different and we don't provide the SPIFFS binary for address 0x300000 because it is already flashed from initial flashing. **The flashing without the 1 MB SPIFFS binary is much quicker and doesn't erase the setup for your wifi network.**
+
+Windows example with "Arduino Uno WiFi Dev Ed Library" esptool:
+```
+C:\Users\Duro\Documents\Arduino\tools\ArduinoFirmwareWiFiLink>..\UnoWiFi\tool\bin\esptool-windows -p COM4: -b 9600 write_flash -ff 80m -fm qio -fs 32m 0x000000 ArduinoFirmwareEsp.ino.arduino_uart.bin 
+```
+
+If you didn't do the initial flashing of WiFi Link firmware 1.0.0 binaries, then you need to flash the SPIFFS binary to address 0x300000. You can use the release 1.0.0 binary ArduinoFirmwareWiFiLink-WEB_PANEL-1.0.0.bin. Add it to the command above or execute it separately. Flashing the SPIFFS erases the settings made in Web Panel and the board returns to AP mode.
+
+### SPIFFS
+ 
+SPIFFS is the file system for ESP8266. 
+ 
+In subfolder data of the source codes of the WiFi Link firmware are the static web files (html, css, js) for the Web Panel. You can add your own files and they will be accessible on expected url.
+ 
+We installed a plugin tool in chapter "Install esp8266 packages". This plugin creates a "ESP8266 Sketch Data upload" command in Tools menu.
+ 
+The tool builds the SPIFFS binary and uploads it to selected port. **With network port it will use OTA and it is fast.** 
+
+With serial port you must use EspRecovery sketch and put the board in DFU mode. If you must do a serial flashing and the IDE upload doesn't work, find the created binary and flash it with esptool on address 0x300000. The path to the binary file is in 'verbose' output mode on IDE console.
+
+Flashing the SPIFFS erases the WiFi settings made in Web Panel and the board starts in AP mode.
+
+## config.json
+
+WiFi Link firmware writes WiFi settings into SPIFFS file config.json. SPIFFS upload overrides the SPIFFS content and the setting are lost. After restart WiFi Link firmware goes to AP mode and you must once again connect to this AP, choose the WiFi network, enter the password and connect back to your WiFi. 
+
+If you often upload the SPIFFS, add your config.json file into data subfolder of the WiFi Link firmware source codes. The basic content is {"ssid":"mywifi","password":"abcd1234"}. 
