@@ -49,7 +49,7 @@ The firmware can be updated or changed. Two things are necessary to prepare Uno 
 1. First step is bridging the USB serial of the AVR microcontroller to ESP8266 serial pins. It is a software thing. A simple sketch called EspRecovery.
 2. Second step is to put the ESP8266 into so called DFU mode pushing a dedicated button while powering the board on.  
 
-These steps are described in detail and with pictures in [Uno Wifi Dev Ed documentation](https://web.archive.org/web/20170711173532/http://www.arduino.org/learning/tutorials/advanced-guides/how-to-change-the-firmware-on-an-arduino-uno-wifi).
+These steps are described in detail and with pictures in [Uno Wifi Dev Ed documentation](https://web.archive.org/web/20170711173532/http://www.arduino.org/learning/tutorials/advanced-guides/how-to-change-the-firmware-on-an-arduino-uno-wifi#linux).
 
 ### esptool
 
@@ -135,7 +135,7 @@ If you didn't install the "Arduino Uno WiFi Dev Ed Library", install the WiFi Li
 2. Download the release 1.0.0 .bin files into folder Arduino/tools/ArduinoFirmwareWiFiLink
 3. In Arduino IDE open the sketch EspRecovery from Examples of "Arduino Uno WiFi Dev Ed Library" or WiFi Link library
 4. Connect the board and upload the EspRecovery sketch
-5. Put the ESP on Uno WiFi into DFU mode - disconnect the board from power and then hold the DFU button while connecting the USB cable. This step is described in detail and with pictures in [Uno Wifi Dev Ed documentation](https://web.archive.org/web/20170711173532/http://www.arduino.org/learning/tutorials/advanced-guides/how-to-change-the-firmware-on-an-arduino-uno-wifi).
+5. Put the ESP on Uno WiFi into DFU mode - disconnect the board from power and then hold the DFU button while connecting the USB cable. This step is described in detail and with pictures in [Uno Wifi Dev Ed documentation](https://web.archive.org/web/20170711173532/http://www.arduino.org/learning/tutorials/advanced-guides/how-to-change-the-firmware-on-an-arduino-uno-wifi#linux).
 6. open the command line and go to folder Arduino/tools/ArduinoFirmwareWiFiLink. (on Windows `cd %USERPROFILE%\Documents\Arduino\tools\ArduinoFirmwareWiFiLink`)
 7. execute esptool with parameters. The first parameter -p should be the serial port where the Arduino is connected. All other parameters are the same for all setups: `-b 9600 write_flash -ff 80m -fm qio -fs 32m 0x000000 ArduinoFirmwareWiFiLink-UNO_WIFI_DEV_ED-1.0.0.bin 0x300000 ArduinoFirmwareWiFiLink-WEB_PANEL-1.0.0.bin`
 
