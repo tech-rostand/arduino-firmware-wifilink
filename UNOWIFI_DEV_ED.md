@@ -20,6 +20,7 @@
        * [OTA upload](#ota-upload)
        * [Serial upload](#serial-upload)
        * [SPIFFS](#spiffs)
+       * [config.json](#configjson)
  
 # Arduino Uno WiFi Developer Edition 
 
@@ -35,7 +36,7 @@ With ESP8266 on board it is desired to use it to write into microcontroller a sk
 
 To write an AVR program received over WiFi into AVR, the ESP must be connected to AVR’s serial pins. For this to work there is a direct serial to serial connection on Uno WiFi Developer Edition.  The electronic switch which connects this serial to serial is controlled with pin 4 of the ESP8266.
 
-![Connection schema from arduino.org](http://static.arduino.org/images/products/details/ArduinoUNOWIFI_drawing2.jpg)
+![Connection schema from arduino.org](doc/ArduinoUNOWIFI_drawing2.jpg)
 
 ## Firmware
 
@@ -48,7 +49,7 @@ The firmware can be updated or changed. Two things are necessary to prepare Uno 
 1. First step is bridging the USB serial of the AVR microcontroller to ESP8266 serial pins. It is a software thing. A simple sketch called EspRecovery.
 2. Second step is to put the ESP8266 into so called DFU mode pushing a dedicated button while powering the board on.  
 
-These steps are described in detail and with pictures in [Uno Wifi Dev Ed documentation](http://www.arduino.org/learning/tutorials/advanced-guides/how-to-change-the-firmware-on-an-arduino-uno-wifi).
+These steps are described in detail and with pictures in [Uno Wifi Dev Ed documentation](https://web.archive.org/web/20170711173532/http://www.arduino.org/learning/tutorials/advanced-guides/how-to-change-the-firmware-on-an-arduino-uno-wifi).
 
 ### esptool
 
@@ -74,9 +75,10 @@ The Arduino.org team did use a JeeLabs ESP-link fork (source code copy) with min
 
 With IDE 1.8.x the library for the AVR side of this firmware is “Arduino Uno WiFi Dev Ed Library”. The network communication possibilities are limited to port 80 and MQTT. The library can be installed with Library Manager in IDE. 
 
-This firmware can be installed or reinstalled with [firmware updater with GUI](http://www.arduino.org/learning/tutorials/advanced-guides/arduino-uno-wifi-firmware-updater).
+This firmware can be installed or reinstalled with [firmware updater with GUI](https://web.archive.org/web/20170711173532/http://www.arduino.org/learning/tutorials/advanced-guides/arduino-uno-wifi-firmware-updater).
 
-[Source code GitHub repository](https://github.com/arduino-org/Esp-Link)
+* [UnoWiFi-FirmwareUpdater-Plugin](https://github.com/arduino-libraries/UnoWiFi-FirmwareUpdater-Plugin/releases)
+* [Source code GitHub repository](https://github.com/arduino-org/Esp-Link)
 
 ### ESP-link
 
@@ -133,7 +135,7 @@ If you didn't install the "Arduino Uno WiFi Dev Ed Library", install the WiFi Li
 2. Download the release 1.0.0 .bin files into folder Arduino/tools/ArduinoFirmwareWiFiLink
 3. In Arduino IDE open the sketch EspRecovery from Examples of "Arduino Uno WiFi Dev Ed Library" or WiFi Link library
 4. Connect the board and upload the EspRecovery sketch
-5. Put the ESP on Uno WiFi into DFU mode - disconnect the board from power and then hold the DFU button while connecting the USB cable. This step is described in detail and with pictures in [Uno Wifi Dev Ed documentation](http://www.arduino.org/learning/tutorials/advanced-guides/how-to-change-the-firmware-on-an-arduino-uno-wifi).
+5. Put the ESP on Uno WiFi into DFU mode - disconnect the board from power and then hold the DFU button while connecting the USB cable. This step is described in detail and with pictures in [Uno Wifi Dev Ed documentation](https://web.archive.org/web/20170711173532/http://www.arduino.org/learning/tutorials/advanced-guides/how-to-change-the-firmware-on-an-arduino-uno-wifi).
 6. open the command line and go to folder Arduino/tools/ArduinoFirmwareWiFiLink. (on Windows `cd %USERPROFILE%\Documents\Arduino\tools\ArduinoFirmwareWiFiLink`)
 7. execute esptool with parameters. The first parameter -p should be the serial port where the Arduino is connected. All other parameters are the same for all setups: `-b 9600 write_flash -ff 80m -fm qio -fs 32m 0x000000 ArduinoFirmwareWiFiLink-UNO_WIFI_DEV_ED-1.0.0.bin 0x300000 ArduinoFirmwareWiFiLink-WEB_PANEL-1.0.0.bin`
 
@@ -144,7 +146,7 @@ C:\Users\Duro\Documents\Arduino\tools\ArduinoFirmwareWiFiLink>..\UnoWiFi\tool\bi
 
 It takes to 20 minutes to write the bin files at 9600 baud. Limitation is the connection between microcontroller and ESP8266 over IO expander. 
 
-After successful flashing of the firmware you can connect to AP created by the ESP8266 and setup the connection to your WiFi network. The process is very **similar** to [first configuration with factory firmware](http://www.arduino.org/learning/getting-started/getting-started-with-arduino-uno-wifi#First_Configuration).
+After successful flashing of the firmware you can connect to AP created by the ESP8266 and setup the connection to your WiFi network. The process is very **similar** to [first configuration with factory firmware](https://web.archive.org/web/20170711173532/http://www.arduino.org/learning/getting-started/getting-started-with-arduino-uno-wifi#First_Configuration).
 
 Use [WiFi Link library](https://github.com/arduino-org/arduino-library-wifilink) in sketches.
 
