@@ -1,16 +1,15 @@
-# Content
- * [Arduino Uno WiFi Developer Edition](#arduino-uno-wifi-developer-edition) 
-    * [Hardware](#hardware)
-    * [Firmware](#firmware)
-        * [Preparing for flashing](#preparing-for-flashing)
-        * [esptool](#esptool)
-        * [Firmware as a sketch](#firmware-as-a-sketch)
+# Arduino Uno WiFi Developer Edition 
+## Content
+  * [Hardware](#hardware)
+  * [Firmware](#firmware)
+      * [Preparing for flashing](#preparing-for-flashing)
+      * [esptool](#esptool)
+      * [Firmware as a sketch](#firmware-as-a-sketch)
  * [ESP8266 Firmwares overview](#esp8266-firmwares-overview)
      * [Uno WiFi Developer Edition factory firmware](#uno-wifi-developer-edition-factory-firmware)
      * [ESP-link](#esp-link)
      * [WiFi Link](#wifi-link)
      * [SDK firmware](#sdk-firmware)
- * [Pin 4](#pin-4)
  * [WiFi Link firmware](#wifi-link-firmware)
      * [Initial serial flashing](#initial-serial-flashing)
      * [Building from source code](#building-from-source-code)
@@ -21,8 +20,8 @@
        * [Serial upload](#serial-upload)
        * [SPIFFS](#spiffs)
        * [config.json](#configjson)
+ * [Pin 4](#pin-4)
  
-# Arduino Uno WiFi Developer Edition 
 
 ## Hardware
 
@@ -106,28 +105,16 @@ Theoretically it should work. It receives AT commands over serial line.
 
 The AVR side must use SC16IS750 like other Uno WiFi libraries or the firmware must be modified to put pin 4 LOW for using direct serial connection. Possible library is WifiEsp. 
 
-## Pin 4
+## WiFi Link firmware
 
-Pin GPIO4 of the ESP8266 is on Uno WiFi Dev Ed connected to an electronic switch which opens the direct serial communication between ATmega328 and ESP8266.
-
-This direct connection can be set to higher baudrate then the path thru IO expander. Tested is 115200 baud. 
-
-The pin 4 must be set LOW to activate the serial line. *It remains a mystery for now, why the pin is in HIGH state at boot. Not one of the firmwares sets it HIGH.  Perhaps the bootloader does it.*
-
-With the serial of AVR connected to ESP8266 it can’t be used for USB sketch uploading and Serial Monitor as it is the case with other equipment connecting to UART serial connection.
-
-Alternative to uploading sketch over USB is OTA upload. Alternative to Serial Monitor is Telnet.
-
-# WiFi Link firmware
-
-## Initial serial flashing
+### Initial serial flashing
 
 The GitHub repository of the WiFi Link firmware contains [binaries of version 1.0.0](https://github.com/arduino-org/arduino-firmware-wifilink/releases/tag/1.0.0). There are two files:
 
 * `ArduinoFirmwareWiFiLink-UNO_WIFI_DEV_ED-1.0.0.bin` - to write from address 0, contains bootloader and the firmware functions. 
 * `ArduinoFirmwareWiFiLink-WEB_PANEL-1.0.0.bin` - to write from flash address 0x300000. It is an image of ESP file system SPIFFS, containing static file for the Web Panel. The file is 1 MB big.
 
-For flashing you need the esptool. You can use the python script or if you installed "Arduino Uno WiFi Dev Ed Library", then you can use packaged esptool from tools/UnoWiFi/tool/bin in your sketches folder Arduino/.
+For flashing you need the esptool. You can use the python script or if you installed "Uno WiFi Updater Plugin", then you can use packaged esptool from tools/UnoWiFi/tool/bin in your sketches folder Arduino/.
 
 If you didn't install the "Arduino Uno WiFi Dev Ed Library", install the WiFi Link library. You will need the EspRecovery sketch from examples of one of these libraries.
 
@@ -150,13 +137,13 @@ After successful flashing of the firmware you can connect to AP created by the E
 
 Use [WiFi Link library](https://github.com/arduino-org/arduino-library-wifilink) in sketches.
 
-## Building from source code
+### Building from source code
 
 The WiFi Link firmware is an Arduino sketch so you can build it in Arduino IDE and upload it to ESP from Arduino IDE. There is no need for some linux toolchains like is the case with other ESP firmwares.
 
 Building WiFi Link firmware from source files gives you possibility to build the newest version, build a branch version, build some fork version or change something in source code you need.
 
-### Install esp8266 packages
+#### Install esp8266 packages
 
 Arduino Uno Wifi Dev Ed is supported from version 2.4 of the esp8266 core for Arduino IDE. For now, the version 2.4 is only a release candidate.
 
@@ -167,7 +154,7 @@ https://github.com/esp8266/Arduino/releases/download/2.4.0-rc1/package_esp8266co
 
 Additionally, install the [Arduino ESP8266 filesystem uploader IDE plugin](https://github.com/esp8266/arduino-esp8266fs-plugin#arduino-esp8266-filesystem-uploader-)
 
-### Download the source code
+#### Download the source code
 
 For start use the source code from the [master repository from Arduino.org](https://github.com/arduino-org/arduino-firmware-wifilink). Every GitHub repository has a green "Clone or download" button which opens a small menu. Choose "Download ZIP".
 
@@ -177,7 +164,7 @@ Start Arduino IDE and open the ArduinoFirmwareEsp.ino sketch. It opens additiona
 
 **Go to config.h tab and uncomment `#define UNOWIFIDEVED`.**
 
-### Board selection and Verify
+#### Board selection and Verify
 
 In tools menu select board options. 
 
@@ -189,7 +176,7 @@ Now verify the sketch with the Verify button. The first compilation after changi
 
 From now on always check the selected board in the right bottom corner of the IDE window. For AVR sketch it should show "Arduino Uno Wifi on ...", for the ESP sketch "Arduino, Uno WiFi, 9600, 4M (1MB SPIFFS) on...".
 
-### OTA upload 
+#### OTA upload 
 
 The WiFi Link firmware supports OTA upload of new version of the firmware binary. OTA upload will only work if some version of WiFi Link is working in the ESP8266 of your Uno WiFi Dev Ed and is configured to STA or STA+AP mode.
 
@@ -199,7 +186,7 @@ The upload of the ArduinoFirmwareEsp.ino will overwrite the bootloader+firmware 
 
 *Notes: Do not put the board in DFU mode. Do not search for some special programmer in Tools menu.*
 
-### Serial upload
+#### Serial upload
 
 **Skip this if OTA upload works.**
  
@@ -220,14 +207,14 @@ To flash with esptool:
 
 The procedure is basically the same as described in "Initial serial flashing". The name of the bin file is different and we don't provide the SPIFFS binary for address 0x300000 because it is already flashed from initial flashing. **The flashing without the 1 MB SPIFFS binary is much quicker and doesn't erase the setup for your wifi network.**
 
-Windows example with "Arduino Uno WiFi Dev Ed Library" esptool:
+Windows example with "Uno WiFi Updater Plugin" esptool:
 ```
 C:\Users\Duro\Documents\Arduino\tools\ArduinoFirmwareWiFiLink>..\UnoWiFi\tool\bin\esptool-windows -p COM4: -b 9600 write_flash -ff 80m -fm qio -fs 32m 0x000000 ArduinoFirmwareEsp.ino.arduino_uart.bin 
 ```
 
 If you didn't do the initial flashing of WiFi Link firmware 1.0.0 binaries, then you need to flash the SPIFFS binary to address 0x300000. You can use the release 1.0.0 binary ArduinoFirmwareWiFiLink-WEB_PANEL-1.0.0.bin. Add it to the command above or execute it separately. Flashing the SPIFFS erases the settings made in Web Panel and the board returns to AP mode.
 
-### SPIFFS
+#### SPIFFS
  
 SPIFFS is the file system for ESP8266. 
  
@@ -241,8 +228,21 @@ With serial port you must use EspRecovery sketch and put the board in DFU mode. 
 
 Flashing the SPIFFS erases the WiFi settings made in Web Panel and the board starts in AP mode.
 
-### config.json
+#### config.json
 
 WiFi Link firmware writes WiFi settings into SPIFFS file config.json. SPIFFS upload overrides the SPIFFS content and the setting are lost. After restart WiFi Link firmware goes to AP mode and you must once again connect to this AP, choose the WiFi network, enter the password and connect back to your WiFi. 
 
 If you often upload the SPIFFS, add your config.json file into data subfolder of the WiFi Link firmware source codes. The basic content is `{"ssid":"yourwifi","password":"yourpassword"}.` 
+
+## Pin 4
+
+Pin GPIO4 of the ESP8266 is on Uno WiFi Dev Ed connected to an electronic switch which opens the direct serial communication between ATmega328 and ESP8266.
+
+This direct connection can be set to higher baudrate then the path thru IO expander. Tested is 115200 baud. 
+
+The pin 4 must be set LOW to activate the serial line. *It remains a mystery for now, why the pin is in HIGH state at boot. Not one of the firmwares sets it HIGH.  Perhaps the bootloader does it.*
+
+With the serial of AVR connected to ESP8266 it can’t be used for USB sketch uploading and Serial Monitor as it is the case with other equipment connecting to UART serial connection.
+
+Alternative to uploading sketch over USB is OTA upload. Alternative to Serial Monitor is Telnet.
+
