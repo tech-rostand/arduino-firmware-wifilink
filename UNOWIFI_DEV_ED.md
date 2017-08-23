@@ -38,7 +38,7 @@ The program of a device installed in the factory is called a firmware. In case o
 
 The firmware can be updated or changed. Two things are necessary to prepare Uno WiFi Dev Ed for writing the firmware to the ESP8266 flash memory (flashing). 
 
-1. First step is bridging the USB serial of the AVR microcontroller to ESP8266 serial pins. It is a software thing. A simple sketch called EspRecovery.
+1. First step is bridging the USB serial of the AVR microcontroller to ESP8266 serial pins. It is a software thing. A simple sketch called EspRecovery from Examples of "Arduino Uno WiFi Dev Ed Library". Upload it into microcontroller.
 2. Second step is to put the ESP8266 into so called DFU mode pushing a dedicated button while powering the board on.  
 
 ![DFU button](doc/arduino216-1.png)
@@ -47,7 +47,7 @@ The firmware can be updated or changed. Two things are necessary to prepare Uno 
 
 All firmware binaries available for Uno Wifi Dev Ed can be flashed with esptool. The Arduino IDE plugin for upgrading the preinstalled firmware version installs esptool under the tools folder of the sketch folder - Arduino/tools/UnoWiFi/tool/bin
 
-The connection thru the IO expander limits the speed of flashing. Recommended baudrate is 9600. Other esptool parameters for the Uno WiFi Dev Ed are *-b 9600 write_flash -ff 80m -fm qio -fs 32m* 
+The connection thru the IO expander limits the speed of flashing. Recommended baudrate is 9600. Other esptool parameters for the Uno WiFi Dev Ed are `-b 9600 write_flash -ff 80m -fm qio -fs 32m` 
 
 The exe version of the esptool is a packaged version of the python script esptool.py
 
@@ -85,7 +85,7 @@ The library for the AVR side is called EL-link and for the Uno WiFi Developer Ed
 
 The WiFi Link firmware is an ESP8266 arduino sketch developed by Arduino.org in Arduino IDE using Arduino esp8266 core. It was developed for the Arduino Star Otto, Arduino Primo and is compatible with Uno WiFi Developer Edition.
 
-Sketch OTA upload is in WiFi Link firmware for now implemented only in the 'ota' branch.
+Sketch OTA upload is in WiFi Link firmware implemented only in the 'ota' branch.
 
 The corresponding library is WiFi Link and it has a familiar API similar to WiFi and Ethernet library.
 
@@ -119,7 +119,7 @@ If you didn't install the "Arduino Uno WiFi Dev Ed Library", install the WiFi Li
 6. open the command line and go to folder Arduino/tools/ArduinoFirmwareWiFiLink. (on Windows `cd %USERPROFILE%\Documents\Arduino\tools\ArduinoFirmwareWiFiLink`)
 7. execute esptool with parameters. The first parameter -p should be the serial port where the Arduino is connected. All other parameters are the same for all setups: `-b 9600 write_flash -ff 80m -fm qio -fs 32m 0x000000 ArduinoFirmwareWiFiLink-UNO_WIFI_DEV_ED-1.0.0.bin 0x300000 ArduinoFirmwareWiFiLink-WEB_PANEL-1.0.0.bin`
 
-Windows example with "Arduino Uno WiFi Dev Ed Library" esptool:
+Windows example with "Uno WiFi Updater plugin" esptool:
 ```
 C:\Users\Duro\Documents\Arduino\tools\ArduinoFirmwareWiFiLink>..\UnoWiFi\tool\bin\esptool-windows -p COM4: -b 9600 write_flash -ff 80m -fm qio -fs 32m 0x000000 ArduinoFirmwareWiFiLink-UNO_WIFI_DEV_ED-1.0.0.bin 0x300000 ArduinoFirmwareWiFiLink-WEB_PANEL-1.0.0.bin 
 ```
@@ -155,7 +155,7 @@ Open or extract the downloaded zip and copy the folder ArduinoFirmwareEsp from z
 
 Start Arduino IDE and open the ArduinoFirmwareEsp.ino sketch. It opens additional files as tabs in IDE.
 
-**Go to config.h tab and uncomment `#define UNOWIFIDEVED`.**
+Go to config.h tab and uncomment `#define UNOWIFIDEVED`.
 
 #### Board selection and Verify
 
@@ -181,7 +181,7 @@ The upload of the ArduinoFirmwareEsp.ino will overwrite the bootloader+firmware 
 
 #### Serial upload
 
-**Skip this if OTA upload works.**
+Skip this if OTA upload works.
  
 For the serial upload you must prepare the board with EspRecovery sketch and DFU mode. 
 
@@ -198,7 +198,7 @@ To flash with esptool:
 6. open the command line and go to folder Arduino/tools/ArduinoFirmwareWiFiLink. (on Windows `cd %USERPROFILE%\Documents\Arduino\tools\ArduinoFirmwareWiFiLink`)
 7. execute esptool with parameters. The first parameter -p should be the serial port where the Arduino is connected. All other parameters are the same for all setups: `-b 9600 write_flash -ff 80m -fm qio -fs 32m 0x000000 ArduinoFirmwareEsp.ino.arduino_uart.bin`
 
-The procedure is basically the same as described in "Initial serial flashing". The name of the bin file is different and we don't provide the SPIFFS binary for address 0x300000 because it is already flashed from initial flashing. **The flashing without the 1 MB SPIFFS binary is much quicker and doesn't erase the setup for your wifi network.**
+The procedure is basically the same as described in "Initial serial flashing". The name of the bin file is different and we don't provide the SPIFFS binary for address 0x300000 because it is already flashed from initial flashing. **The flashing without the 1MB SPIFFS binary is much quicker and doesn't erase the setup for your wifi network.**
 
 Windows example with "Uno WiFi Updater Plugin" esptool:
 ```
