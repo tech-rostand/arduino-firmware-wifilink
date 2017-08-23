@@ -13,13 +13,6 @@
  * [WiFi Link firmware](#wifi-link-firmware)
      * [Initial serial flashing](#initial-serial-flashing)
      * [Building from source code](#building-from-source-code)
-       * [Install esp8266 packages](#install-esp8266-packages)
-       * [Download the source code](#download-the-source-code)
-       * [Board selection and Verify](#board-selection-and-verify)
-       * [OTA upload](#ota-upload)
-       * [Serial upload](#serial-upload)
-       * [SPIFFS](#spiffs)
-       * [config.json](#configjson)
  * [Pin 4](#pin-4)
  
 
@@ -27,7 +20,7 @@
 
 Arduino Uno WiFi Developer Edition is an Arduino UNO R3 with ESP8266 integrated on the board. It was developed and manufactured by Arduino.org.
 
-ESP8266 is a ‘WiFi chip’  often used in combination with Arduino microcontrollers. Classic way is to connect the AVR or other microcontroller with ESP8266 using UART (Serial). The serial connection is then not available for communication with a computer (USB). Modern way of connecting AVR with ESP uses SPI connection. *It looks like the non ‘Dev Ed’ Uno WiFi will use SPI.* 
+ESP8266 is a ‘WiFi chip’  often used in combination with Arduino microcontrollers. Classic way is to connect the AVR or other microcontroller with ESP8266 using UART (Serial). The serial connection is then not available for communication with a computer (USB). Modern way of connecting AVR with ESP uses SPI connection.
 
 Arduino Uno WiFi Developer Edition connects ATmega328 microcontroller with ESP8266 using IO expander SC16IS750. ESP8266 is connected to IO expander with Serial, but the ATmega328 is to IO expander connected using analog ports A4 and A5 with TWI protocol. The IO expander converts the protocol. Speed is limited to 19200 baud, which is very slow.
 
@@ -35,7 +28,7 @@ With ESP8266 on board it is desired to use it to write into microcontroller a sk
 
 To write an AVR program received over WiFi into AVR, the ESP must be connected to AVR’s serial pins. For this to work there is a direct serial to serial connection on Uno WiFi Developer Edition.  The electronic switch which connects this serial to serial is controlled with pin 4 of the ESP8266.
 
-![Connection schema from arduino.org](doc/ArduinoUNOWIFI_drawing2.jpg)
+![Connection schema](doc/ArduinoUNOWIFI_drawing2.jpg)
 
 ## Firmware
 
@@ -48,7 +41,7 @@ The firmware can be updated or changed. Two things are necessary to prepare Uno 
 1. First step is bridging the USB serial of the AVR microcontroller to ESP8266 serial pins. It is a software thing. A simple sketch called EspRecovery.
 2. Second step is to put the ESP8266 into so called DFU mode pushing a dedicated button while powering the board on.  
 
-These steps are described in detail and with pictures in [Uno Wifi Dev Ed documentation](https://web.archive.org/web/20170711173532/http://www.arduino.org/learning/tutorials/advanced-guides/how-to-change-the-firmware-on-an-arduino-uno-wifi#linux).
+![DFU button](doc/arduino216-1.png)
 
 ### esptool
 
@@ -64,7 +57,7 @@ Warning: don't use the erase command. Without some bootloader in the ESP8266 it 
  
 ### Firmware as a sketch
  
-ESP8266 is supported in Arduino IDE with Arduino esp8266 core. It means that arduino sketch can be uploaded into ESP8266. The WiFi Link firmware is a sketch which can be build and uploaded with the Arduino IDE upload button. It works only as an OTA upload. The  tools for serial upload have a problem with the way the ESP is wired on Uno Wifi Dev Ed.
+ESP8266 is supported in Arduino IDE with Arduino esp8266 core. It means that arduino sketch can be uploaded into ESP8266. The WiFi Link firmware is a sketch which can be build and uploaded with the Arduino IDE upload button. 
 
 ## ESP8266 Firmwares overview
 
@@ -90,7 +83,7 @@ The library for the AVR side is called EL-link and for the Uno WiFi Developer Ed
 
 ### WiFi Link
 
-The WiFi Link firmware is an ESP8266 arduino sketch developed by Arduino.org in Arduino IDE using Arduino esp8266 core. It is developed for the Arduino Star Otto, Arduino Primo and Uno WiFi and is compatible with Uno WiFi Developer Edition.
+The WiFi Link firmware is an ESP8266 arduino sketch developed by Arduino.org in Arduino IDE using Arduino esp8266 core. It was developed for the Arduino Star Otto, Arduino Primo and is compatible with Uno WiFi Developer Edition.
 
 Sketch OTA upload is in WiFi Link firmware for now implemented only in the 'ota' branch.
 
@@ -122,7 +115,7 @@ If you didn't install the "Arduino Uno WiFi Dev Ed Library", install the WiFi Li
 2. Download the release 1.0.0 .bin files into folder Arduino/tools/ArduinoFirmwareWiFiLink
 3. In Arduino IDE open the sketch EspRecovery from Examples of "Arduino Uno WiFi Dev Ed Library" or WiFi Link library
 4. Connect the board and upload the EspRecovery sketch
-5. Put the ESP on Uno WiFi into DFU mode - disconnect the board from power and then hold the DFU button while connecting the USB cable. This step is described in detail and with pictures in [Uno Wifi Dev Ed documentation](https://web.archive.org/web/20170711173532/http://www.arduino.org/learning/tutorials/advanced-guides/how-to-change-the-firmware-on-an-arduino-uno-wifi#linux).
+5. Put the ESP on Uno WiFi into DFU mode - disconnect the board from power and then hold the DFU button while connecting the USB cable. 
 6. open the command line and go to folder Arduino/tools/ArduinoFirmwareWiFiLink. (on Windows `cd %USERPROFILE%\Documents\Arduino\tools\ArduinoFirmwareWiFiLink`)
 7. execute esptool with parameters. The first parameter -p should be the serial port where the Arduino is connected. All other parameters are the same for all setups: `-b 9600 write_flash -ff 80m -fm qio -fs 32m 0x000000 ArduinoFirmwareWiFiLink-UNO_WIFI_DEV_ED-1.0.0.bin 0x300000 ArduinoFirmwareWiFiLink-WEB_PANEL-1.0.0.bin`
 
