@@ -13,6 +13,7 @@
  * [WiFi Link firmware](#wifi-link-firmware)
      * [Initial serial flashing](#initial-serial-flashing)
      * [Building from source code](#building-from-source-code)
+     * [AVR sketch OTA upload support](#avr-sketch-ota-upload-support)
  * [Pin 4](#pin-4)
  
 
@@ -226,6 +227,31 @@ Flashing the SPIFFS erases the WiFi settings made in Web Panel and the board sta
 WiFi Link firmware writes WiFi settings into SPIFFS file config.json. SPIFFS upload overrides the SPIFFS content and the setting are lost. After restart WiFi Link firmware goes to AP mode and you must once again connect to this AP, choose the WiFi network, enter the password and connect back to your WiFi. 
 
 If you often upload the SPIFFS, add your config.json file into data subfolder of the WiFi Link firmware source codes. The basic content is `{"ssid":"yourwifi","password":"yourpassword"}.` 
+
+### AVR sketch OTA upload support
+
+The WiFi Link firmware build from the master branch of the GitHub repository doesn't support AVR sketch OTA upload. The sketch OTA upload is implemented only in the 'ota' branch. To build from the source codes of the ota branch we need a library called dfu.
+
+#### The dfu library
+
+The dfu library is not available in Library manager in IDE. The source code repository is on [GitHub](https://github.com/ciminaghi/libdfu/tree/arduino-debug). And it is not an arduino library. First running a script from arduino subfolder builds the arduino version.
+
+Step to arduino version of the dfu library:
+1. download the source code zip from the 'arduino-debug' branch in some temporary folder
+2. run the bash script from arduino subfolder. It creates a zip with the arduino style library
+3. install the library zip with IDE or extract it to your libraries folder
+
+#### Compiling the WiFi link firmware 'ota' branch
+
+The current source code in arduino-org/arduino-firmware-wifilink/ota needs a small change with 'arduino-debug' version of the dfu libray. In ArduinoMcuOTA.ino delete the line `#include <dfu-avrisp.h>`. 
+
+If the firmware compiles you can upload it into ESP8266.
+
+#### Sketch OTA upload tool
+
+Tool for OTA uploading the mcu sketch is a python script available in arduino.org [GitHub repository](https://github.com/arduino-org/arduino-tool-mcu-ota). To run it, you need Python 2.7, 3.x doesn't work. With python installed you can package the script as exe. Instructions are in the GitHub repository.
+
+A way to integrate the tool into IDE is patching the platform.txt file.
 
 ## Pin 4
 
