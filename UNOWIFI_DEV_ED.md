@@ -264,7 +264,15 @@ If the firmware compiles you can upload it into ESP8266.
 
 Tool for OTA uploading the mcu sketch is a python script available in arduino.org [GitHub repository](https://github.com/arduino-org/arduino-tool-mcu-ota). To run it, you need Python 2.7, 3.x doesn't work. With python installed you can package the script as exe. Instructions are in the GitHub repository.
 
-A way to integrate the tool into IDE is patching the platform.txt file.
+#### IDE integration
+
+A way to integrate the tool arduino-tool-mcu-ota into IDE is patching the platform.txt file, but the file locations sometimes change with IDE versions.
+
+The platform.txt values to change are 
+```tools.avrdude.network_cmd={runtime.tools.arduinoOTA.path}/bin/arduino_mcuota`
+`tools.avrdude.upload.network_pattern="{network_cmd}" -i {serial.port} -p {upload.network.port} -f "{build.path}/{build.project_name}.hex"```
+
+Put the tool executable to a location evaluated by tools.avrdude.network_cmd.
 
 ## Pin 4
 
@@ -272,7 +280,7 @@ Pin GPIO4 of the ESP8266 is on Uno WiFi Dev Ed connected to an electronic switch
 
 This direct connection can be set to higher baudrate then the path thru IO expander. Tested is 115200 baud. 
 
-The pin 4 must be set LOW to activate the serial line. *It remains a mystery for now, why the pin is in HIGH state at boot. Not one of the firmwares sets it HIGH.  Perhaps the bootloader does it.*
+The pin 4 must be changed to LOW to activate the serial line. 
 
 With the serial of AVR connected to ESP8266 it can’t be used for USB sketch uploading and Serial Monitor as it is the case with other equipment connecting to UART serial connection.
 
