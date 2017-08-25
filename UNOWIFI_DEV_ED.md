@@ -5,7 +5,8 @@
       * [Preparing for flashing](#preparing-for-flashing)
       * [esptool](#esptool)
       * [Firmware as a sketch](#firmware-as-a-sketch)
- * [ESP8266 Firmwares overview](#esp8266-firmwares-overview)
+  * [Connecting to WiFi network](#connecting-to-wifi-network)
+  * [ESP8266 Firmwares overview](#esp8266-firmwares-overview)
      * [Uno WiFi Developer Edition factory firmware](#uno-wifi-developer-edition-factory-firmware)
      * [ESP-link](#esp-link)
      * [WiFi Link](#wifi-link)
@@ -59,6 +60,18 @@ Warning: don't use the erase command. Without some bootloader in the ESP8266 it 
 ### Firmware as a sketch
  
 ESP8266 is supported in Arduino IDE with Arduino esp8266 core. It means that arduino sketch can be uploaded into ESP8266. The WiFi Link firmware is a sketch which can be build and uploaded with the Arduino IDE upload button. 
+
+## Connecting to WiFi network
+
+With factory firmware and other firmwares-with-Web-Panel the Uno WiFi network configuration uses the configuration Access Point (AP). User connects to the WiFi network created by a device, goes to fixed IP address URL and configures the network access in a Web Panel. The device connects in STA mode to the selected WiFi network and is accessible at IP address assigned by a DHCP or a static address set in Web Panel.
+
+The Uno WiFi WiFi network has a name "Arduino-Uno-WiFi-xxxxxx" with arduino.org firmwares and "ESP-xxxxxx" with JeeLabs firmware. The fixed address in AP mode is http://192.168.240.1/ for the arduino.org firmwares and http://192.168.4.1/ with JeeLabs firmware.
+
+After every restart the ESP8266 is for some time in AP+STA mode to allow changing the settings if the network selected for STA mode is not accessible.
+
+* [First configuration with factory firmware](https://web.archive.org/web/20170711173532/http://www.arduino.org/learning/getting-started/getting-started-with-arduino-uno-wifi#First_Configuration)
+
+**The AVR sketch doesn't need to connect to a WiFi network. It can use the connection created by ESP8266 with Web Panel settings. Don't use WiFi.begin, only put a 5 seconds delay to the start of the sketch to let ESP8266 time to initialize after board's power-up.**
 
 ## ESP8266 Firmwares overview
 
