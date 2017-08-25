@@ -15,7 +15,7 @@
      * [Initial serial flashing](#initial-serial-flashing)
      * [Building from source code](#building-from-source-code)
      * [AVR sketch OTA upload support](#avr-sketch-ota-upload-support)
- * [Pin 4](#pin-4)
+     * [Straight serial connection](#straight-serial-connection)
  
 
 ## Hardware
@@ -111,6 +111,8 @@ The corresponding library is WiFi Link and it has a familiar API similar to WiFi
 Theoretically it should work. It receives AT commands over serial line.
 
 The AVR side must use SC16IS750 like other Uno WiFi libraries or the firmware must be modified to put pin 4 LOW for using direct serial connection. Possible library is WifiEsp. 
+
+Or AT commands can be send with "Arduino Uno WiFi Dev Ed Library" WifiData interface like in the EspRecovery sketch.
 
 ## WiFi Link firmware
 
@@ -269,12 +271,22 @@ Tool for OTA uploading the mcu sketch is a python script available in arduino.or
 A way to integrate the tool arduino-tool-mcu-ota into IDE is patching the platform.txt file, but the file locations sometimes change with IDE versions.
 
 The platform.txt values to change are 
-```tools.avrdude.network_cmd={runtime.tools.arduinoOTA.path}/bin/arduino_mcuota`
-`tools.avrdude.upload.network_pattern="{network_cmd}" -i {serial.port} -p {upload.network.port} -f "{build.path}/{build.project_name}.hex"```
+```
+tools.avrdude.network_cmd={runtime.tools.arduinoOTA.path}/bin/arduino_mcuota
+tools.avrdude.upload.network_pattern="{network_cmd}" -i {serial.port} -p {upload.network.port} -f "{build.path}/{build.project_name}.hex"
+```
 
 Put the tool executable to a location evaluated by tools.avrdude.network_cmd.
 
-## Pin 4
+### Straight serial connection 
+
+On Uno WiFi Dev Ed the standard connection thru SC16IS750 is limited to 19200 baud, which is very slow. There is a way to use a direct Atmega to ESP serial connection at 115200 baud.
+
+With the serial of Atmega connected to ESP8266 it can’t be used for USB sketch uploading and Serial Monitor as it is the case with other equipment connecting to UART serial connection.
+
+Alternative to uploading sketch over USB is OTA upload. Alternative to Serial Monitor is Telnet.
+
+#### Pin 4
 
 Pin GPIO4 of the ESP8266 is on Uno WiFi Dev Ed connected to an electronic switch which opens the direct serial communication between ATmega328 and ESP8266.
 
@@ -282,7 +294,10 @@ This direct connection can be set to higher baudrate then the path thru IO expan
 
 The pin 4 must be changed to LOW to activate the serial line. 
 
-With the serial of AVR connected to ESP8266 it can’t be used for USB sketch uploading and Serial Monitor as it is the case with other equipment connecting to UART serial connection.
+#### Changed firmware
 
-Alternative to uploading sketch over USB is OTA upload. Alternative to Serial Monitor is Telnet.
+[This](https://github.com/jandrassy/arduino-firmware-wifilink/tree/ota) source code GitHub repository with WiFi Link ota branch fork has among other changes #ifdefs for the 'straight' serial connection.
 
+#### Changed library
+
+The original WiFi Link library can not be used because it assumes that SC16IS750 should be used if `__AVR_ATmega328P__` is defined. SC16IS750 must be 'cut out'.
