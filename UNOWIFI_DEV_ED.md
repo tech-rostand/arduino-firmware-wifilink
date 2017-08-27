@@ -28,9 +28,11 @@ Arduino Uno WiFi Developer Edition connects ATmega328 microcontroller with ESP82
 
 With ESP8266 on board it is desired to use it to write into microcontroller a sketch send ‘over the air’. ‚Over the air‘ or OTA upload means the sketch is send from IDE to the board using WiFi.
 
-To write an AVR program received over WiFi into AVR, the ESP must be connected to AVR’s serial pins. For this to work there is a direct serial to serial connection on Uno WiFi Developer Edition.  The electronic switch which connects this serial to serial is controlled with pin 4 of the ESP8266.
+To write an AVR program received over WiFi into AVR, the ESP must be connected to AVR’s serial pins. For this to work there is a direct serial to serial connection on Uno WiFi Developer Edition. The electronic switch which connects this serial to serial is controlled with pin 4 of the ESP8266.
 
 ![Connection schema](doc/ArduinoUNOWIFI_drawing2.jpg)
+
+[arduino-uno-wifi-schematic.pdf](doc/Arduino-UNO-WiFi-V4_AF1.pdf)
 
 ## Firmware
 
@@ -289,6 +291,10 @@ Alternative to uploading sketch over USB is OTA upload. Alternative to Serial Mo
 #### Pin 4
 
 Pin GPIO4 of the ESP8266 is on Uno WiFi Dev Ed connected to an electronic switch which opens the direct serial communication between ATmega328 and ESP8266.
+
+The same effect has a hardware patch - [connecting the point TP_GPIOESP to ground](doc/TP_GPIOESP_GND.jpg)
+
+![schema](doc/straightserial.jpg)
 
 This direct connection can be set to higher baudrate then the path thru IO expander. Tested is 115200 baud. 
 
