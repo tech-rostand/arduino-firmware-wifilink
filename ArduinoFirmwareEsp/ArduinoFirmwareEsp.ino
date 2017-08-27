@@ -20,7 +20,6 @@ ESP8266WebServer server(80);    //server UI
 
 void setup() {
 
-  ESP.wdtDisable();
   resetMCU(); // reset of the MCU to be in sync after watchdog reset
 
   #if defined(ESP_CH_UART)
