@@ -123,7 +123,7 @@ Or AT commands can be send with "Arduino Uno WiFi Dev Ed Library" WifiData inter
 The GitHub repository of the WiFi Link firmware contains [binaries of version 1.0.0](https://github.com/arduino-org/arduino-firmware-wifilink/releases/tag/1.0.0). There are two files:
 
 * `ArduinoFirmwareWiFiLink-UNO_WIFI_DEV_ED-1.0.0.bin` - to write from address 0, contains bootloader and the firmware functions. 
-* `ArduinoFirmwareWiFiLink-WEB_PANEL-1.0.0.bin` - to write from flash address 0x300000. It is an image of ESP file system SPIFFS, containing static file for the Web Panel. The file is 1 MB big.
+* `ArduinoFirmwareWiFiLink-WEB_PANEL-1.0.0.bin` - to write from flash address 0x300000. It is an image of ESP file system SPIFFS, containing static files for the Web Panel. The file is 1 MB big.
 
 For flashing you need the esptool. You can use the python script or if you installed "Uno WiFi Updater Plugin", then you can use packaged esptool from tools/UnoWiFi/tool/bin in your sketches folder Arduino/.
 
@@ -306,4 +306,4 @@ The pin 4 must be changed to LOW to activate the serial line.
 
 #### Changed library
 
-The original WiFi Link library can not be used because it assumes that SC16IS750 should be used if `__AVR_ATmega328P__` is defined. SC16IS750 must be 'cut out'.
+The original WiFi Link library can not be used because it assumes that SC16IS750 should be used if `__AVR_ATmega328P__` is defined. SC16IS750 must be 'cut out' like in [the 'straight-serial' branch in a fork of WiFi Link library](https://github.com/jandrassy/arduino-library-wifilink/tree/straight-serial).
