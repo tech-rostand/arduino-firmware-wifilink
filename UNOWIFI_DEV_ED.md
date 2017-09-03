@@ -38,6 +38,8 @@ To write an AVR program received over WiFi into AVR, the ESP must be connected t
 
 The program of a device installed in the factory is called a firmware. In case of Uno WiFi the firmware is the program in the ESP8266. The purpose is to serve as a network interface for the program (sketch) in the AVR microcontroller and provide Web Panel for setup of the WiFi connection.
 
+**Warning: While experimenting with firmware there is always a risk of bricking your device.** 
+
 ### Preparing for flashing
 
 The firmware can be updated or changed. Two things are necessary to prepare Uno WiFi Dev Ed for writing the firmware to the ESP8266 flash memory (flashing). 
@@ -117,6 +119,8 @@ The AVR side must use SC16IS750 like other Uno WiFi libraries or the firmware mu
 Or AT commands can be send with "Arduino Uno WiFi Dev Ed Library" WifiData interface like in the EspRecovery sketch.
 
 ## WiFi Link firmware
+
+**Warning: While experimenting with firmware there is always a risk of bricking your device.**
 
 ### Initial serial flashing
 
@@ -199,7 +203,7 @@ The upload of the ArduinoFirmwareEsp.ino will overwrite the bootloader+firmware 
 
 #### Serial upload
 
-Skip this if OTA upload works.
+*OTA upload should work. If not, take time to make it work. With serial upload the chance of bricking your board is higher.*  
  
 For the serial upload you must prepare the board with EspRecovery sketch and DFU mode. 
 
@@ -255,7 +259,7 @@ The dfu library is not available in Library manager in IDE. The source code repo
 
 Step to arduino version of the dfu library:
 1. download the source code zip from the 'arduino-debug' branch in some temporary folder
-2. run the bash script from arduino subfolder. It creates a zip with the arduino style library
+2. run the bash script from arduino subfolder. It creates a zip with the arduino library
 3. install the library zip with IDE or extract it to your libraries folder
 
 #### Compiling the WiFi link firmware 'ota' branch
@@ -288,9 +292,11 @@ With the serial of Atmega connected to ESP8266 it can’t be used for USB sketch u
 
 Alternative to uploading sketch over USB is OTA upload. Alternative to Serial Monitor is Telnet.
 
+Warning: use firmware which activates the straight serial connection only if you mastered firmware OTA upload.
+
 #### Pin 4
 
-Pin GPIO4 of the ESP8266 is on Uno WiFi Dev Ed connected to an electronic switch which opens the direct serial communication between ATmega328 and ESP8266.
+Pin GPIO4 of the ESP8266 is on Uno WiFi Dev Ed connected to an electronic switch which opens the direct serial communication between ATmega328 and ESP8266. The pin 4 must be changed to LOW to activate the serial line. 
 
 The same effect has a hardware patch - [connecting the point TP_GPIOESP to ground](doc/TP_GPIOESP_GND.jpg)
 
@@ -298,7 +304,7 @@ The same effect has a hardware patch - [connecting the point TP_GPIOESP to groun
 
 This direct connection can be set to higher baudrate then the path thru IO expander. Tested is 115200 baud. 
 
-The pin 4 must be changed to LOW to activate the serial line. 
+The hardware activation of the direct connection can help with serial flashing of esp firmware of seemingly bricked Uno WiFi.
 
 #### Changed firmware
 
