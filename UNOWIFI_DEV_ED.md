@@ -20,11 +20,11 @@
 
 ## Hardware
 
-Arduino Uno WiFi Developer Edition is an Arduino UNO R3 with ESP8266 integrated on the board. It was developed and manufactured by Arduino.org.
+Arduino Uno WiFi Developer Edition is an Arduino UNO R3 with ESP8266 integrated on the board. It was developed and manufactured by Arduino.org. ["Getting started"](https://www.arduino.cc/en/Guide/ArduinoUnoWiFi) tutorial is now on the arduino.cc site.
 
 ESP8266 is a ‘WiFi chip’  often used in combination with Arduino microcontrollers. Classic way is to connect the AVR or other microcontroller with ESP8266 using UART (Serial). The serial connection is then not available for communication with a computer (USB). Modern way of connecting AVR with ESP uses SPI connection.
 
-Arduino Uno WiFi Developer Edition connects ATmega328 microcontroller with ESP8266 using IO expander SC16IS750. ESP8266 is connected to IO expander with Serial, but the ATmega328 is to IO expander connected using analog ports A4 and A5 with TWI protocol. The IO expander converts the protocol. Speed is limited to 19200 baud, which is very slow.
+Arduino Uno WiFi Developer Edition connects ATmega328 microcontroller with ESP8266 using IO expander SC16IS750. ESP8266 is connected to IO expander with Serial, but the ATmega328 is to IO expander connected using pins A4 and A5 with Wire protocol. The IO expander converts the protocol. Speed is limited to 19200 baud, which is very slow.
 
 With ESP8266 on board it is desired to use it to write into microcontroller a sketch send ‘over the air’. ‚Over the air‘ or OTA upload means the sketch is send from IDE to the board using WiFi.
 
@@ -73,7 +73,7 @@ The Uno WiFi WiFi network has a name "Arduino-Uno-WiFi-xxxxxx" with arduino.org 
 
 After every restart the ESP8266 is for some time in AP+STA mode to allow changing the settings if the network selected for STA mode is not accessible.
 
-* [First configuration with factory firmware](https://web.archive.org/web/20170711173532/http://www.arduino.org/learning/getting-started/getting-started-with-arduino-uno-wifi#First_Configuration)
+* [First configuration with factory firmware](https://www.arduino.cc/en/Guide/ArduinoUnoWiFi#toc12)
 
 **The AVR sketch doesn't need to connect to a WiFi network. It can use the connection created by ESP8266 with Web Panel settings. Don't use WiFi.begin, only put a 5 seconds delay to the start of the sketch to let ESP8266 time to initialize after board's power-up.**
 
@@ -85,7 +85,7 @@ The Arduino.org team did use a JeeLabs ESP-link fork (source code copy) with min
 
 With IDE 1.8.x the library for the AVR side of this firmware is “Arduino Uno WiFi Dev Ed Library”. The network communication possibilities are limited to port 80 and MQTT. The library can be installed with Library Manager in IDE. 
 
-This firmware can be installed or reinstalled with [firmware updater with GUI](https://web.archive.org/web/20170711173532/http://www.arduino.org/learning/tutorials/advanced-guides/arduino-uno-wifi-firmware-updater).
+This firmware can be installed or reinstalled with [firmware updater with GUI](https://www.arduino.cc/en/Guide/ArduinoUnoWiFiFwUpdater).
 
 * [UnoWiFi-FirmwareUpdater-Plugin](https://github.com/arduino-libraries/UnoWiFi-FirmwareUpdater-Plugin/releases)
 * [Source code GitHub repository](https://github.com/arduino-org/Esp-Link)
@@ -101,7 +101,7 @@ The library for the AVR side is called EL-link and for the Uno WiFi Developer Ed
 
 ### WiFi Link
 
-The WiFi Link firmware is an ESP8266 arduino sketch developed by Arduino.org in Arduino IDE using Arduino esp8266 core. It was developed for the Arduino Star Otto, Arduino Primo and is compatible with Uno WiFi Developer Edition.
+The WiFi Link firmware is an ESP8266 arduino sketch developed by Arduino.org in Arduino IDE using Arduino esp8266 core. It was developed for the Arduino Star Otto, Arduino Primo and Uno WiFi.
 
 Sketch OTA upload is in WiFi Link firmware implemented only in the 'ota' branch.
 
@@ -148,7 +148,7 @@ C:\Users\Duro\Documents\Arduino\tools\ArduinoFirmwareWiFiLink>..\UnoWiFi\tool\bi
 
 It takes to 20 minutes to write the bin files at 9600 baud. Limitation is the connection between microcontroller and ESP8266 over IO expander. 
 
-After successful flashing of the firmware you can connect to AP created by the ESP8266 and setup the connection to your WiFi network. The process is very **similar** to [first configuration with factory firmware](https://web.archive.org/web/20170711173532/http://www.arduino.org/learning/getting-started/getting-started-with-arduino-uno-wifi#First_Configuration).
+After successful flashing of the firmware you can connect to AP created by the ESP8266 and setup the connection to your WiFi network. The process is very **similar** to [first configuration with factory firmware](https://www.arduino.cc/en/Guide/ArduinoUnoWiFi#toc12).
 
 Use [WiFi Link library](https://github.com/arduino-org/arduino-library-wifilink) in sketches.
 
