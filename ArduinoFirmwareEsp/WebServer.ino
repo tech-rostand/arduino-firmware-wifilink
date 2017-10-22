@@ -207,6 +207,7 @@ void initWebServer(){
       MDNS.setInstanceName(newhostname);
       server.send(200, "text/plain", newhostname);
       Config.setParam("hostname", newhostname);
+      HOSTNAME = newhostname;
     });
 
     server.on("/wifi/netNumber", []() {
