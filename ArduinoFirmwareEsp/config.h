@@ -15,8 +15,11 @@
 //#define PRIMO
 #define UNOWIFIDEVED
 //#define UNOWIFI
+//#define GENERIC_ESP8266
 
+#ifdef UNOWIFIDEVED
 #define UNOWIFIDEVED_STRAIGHT_SERIAL
+#endif
 
 /*
  * Enable/Disable Debug
@@ -71,5 +74,14 @@
   #define BAUDRATE_COMMUNICATION 19200
 #endif
   #define WIFI_LED 14
+  #define MCU_RESET_PIN 12
   #define SSIDNAME "Arduino-Uno-WiFi"
+#elif defined(GENERIC_ESP8266)
+  #define BOARDMODEL "GENERIC_ESP8266"
+  #define ARDUINO_BOARD "esp8266"   //mdns
+  #define ESP_CH_UART
+  #define BAUDRATE_COMMUNICATION 115200
+  #define WIFI_LED 14
+  #define MCU_RESET_PIN 0
+  #define SSIDNAME "ESP8266-Module"
 #endif

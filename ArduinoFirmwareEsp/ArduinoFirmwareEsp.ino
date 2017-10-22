@@ -29,6 +29,8 @@ void setup() {
   digitalWrite(4, 1);
 #endif
 
+  resetMCU(); // reset of the MCU to be in sync
+
   #if defined(ESP_CH_UART)
   _setup_dfu();
   #endif
@@ -36,20 +38,17 @@ void setup() {
   pinMode(WIFI_LED, OUTPUT);      //initialize wifi LED
   digitalWrite(WIFI_LED, LOW);
   ArduinoOTA.begin();             //OTA ESP
-  initMDNS();
 
   CommunicationLogic.begin();
   SPIFFS.begin();
   initHostname();
+  initMDNS();
   initWebServer();                 //UI begin
   setWiFiConfig();
 
-  resetMCU(); // reset of the MCU to be in sync
 }
 
 void loop() {
-
-  ESP.wdtFeed();
 
   ArduinoOTA.handle();
   CommunicationLogic.handle();
@@ -159,16 +158,14 @@ void setWiFiConfig(){
 }
 
 void resetMCU() {
-#if defined(UNOWIFIDEVED)
 #if defined(UNOWIFIDEVED_STRAIGHT_SERIAL)
-  delay(1);
   digitalWrite(4, 0);
 #endif
-  pinMode(12, OUTPUT);
-  digitalWrite(12, 0);
+#ifdef MCU_RESET_PIN
+  pinMode(MCU_RESET_PIN, OUTPUT);
+  digitalWrite(MCU_RESET_PIN, LOW);
   delay(1);
-  digitalWrite(12, 1);
-  delay(200);
+  digitalWrite(MCU_RESET_PIN, HIGH);
 #endif
 }
 
