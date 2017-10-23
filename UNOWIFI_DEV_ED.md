@@ -24,7 +24,7 @@ Arduino Uno WiFi Developer Edition is an Arduino UNO R3 with ESP8266 integrated 
 
 ESP8266 is a ‘WiFi chip’  often used in combination with Arduino microcontrollers. Classic way is to connect the AVR or other microcontroller with ESP8266 using UART (Serial). The serial connection is then not available for communication with a computer (USB). Modern way of connecting AVR with ESP uses SPI connection.
 
-Arduino Uno WiFi Developer Edition connects ATmega328 microcontroller with ESP8266 using IO expander SC16IS750. ESP8266 is connected to IO expander with Serial, but the ATmega328 is to IO expander connected using pins A4 and A5 with Wire protocol. The IO expander converts the protocol. Speed is limited to 19200 baud, which is very slow.
+Arduino Uno WiFi Developer Edition connects ATmega328 microcontroller with ESP8266 using IO expander SC16IS750 ([here as module](http://sandboxelectronics.com/?product=sc16is750-i2cspi-to-uart-bridge-module)). It is used as additional UART connected to Atmega as I2C device. ESP8266 is connected to SC16IS750 UART to UART. The connection speed is limited with I2C.
 
 With ESP8266 on board it is desired to use it to write into microcontroller a sketch send ‘over the air’. ‚Over the air‘ or OTA upload means the sketch is send from IDE to the board using WiFi.
 
@@ -112,11 +112,9 @@ The corresponding library is WiFi Link and it has a familiar API similar to WiFi
 
 ### SDK firmware
 
-Theoretically it should work. It receives AT commands over serial line.
+Theoretically it should work. It receives AT commands over serial line. Problem is, how to to set default slower baudrate for the ESP after flashing the firmware. Only option is activating direct serial connection by connecting soldering point TP_GPIOESP to ground until lower default baudrate is set with AT commands.
 
-The AVR side must use SC16IS750 like other Uno WiFi libraries or the firmware must be modified to put pin 4 LOW for using direct serial connection. Possible library is WifiEsp. 
-
-Or AT commands can be send with "Arduino Uno WiFi Dev Ed Library" WifiData interface like in the EspRecovery sketch.
+Possible library is WifiEsp over [SC16IS750 object](https://github.com/SandboxElectronics/UART_Bridge), which implements the Serial interface. 
 
 ## WiFi Link firmware
 
