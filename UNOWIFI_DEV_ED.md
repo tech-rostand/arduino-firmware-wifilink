@@ -112,7 +112,9 @@ The corresponding library is WiFi Link and it has a familiar API similar to WiFi
 
 ### SDK firmware
 
-Theoretically it should work. It receives AT commands over serial line. Problem is, how to to set default slower baudrate for the ESP after flashing the firmware. Only option is activating direct serial connection by connecting soldering point TP_GPIOESP to ground until lower default baudrate is set with AT commands.
+Theoretically it should work. It receives AT commands over serial line. 
+
+Problem is, how to to set slower baud rate default for the ESP after flashing the firmware. Only option to execute that one AT command is to create a 115200 baud connection with external USB TTL adapter like described in section "Burn the firmware using ESP Flash download tool" of the [How to change the firmware of Arduino UNO WiFi](https://www.arduino.cc/en/Guide/ArduinoUnoWiFiChangeFw).
 
 Possible library is WifiEsp over [SC16IS750 object](https://github.com/SandboxElectronics/UART_Bridge), which implements the Serial interface. 
 
