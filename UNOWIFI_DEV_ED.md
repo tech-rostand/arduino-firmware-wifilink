@@ -22,9 +22,9 @@
 
 Arduino Uno WiFi Developer Edition is an Arduino UNO R3 with ESP8266 integrated on the board. It was developed and manufactured by Arduino.org. ["Getting started"](https://www.arduino.cc/en/Guide/ArduinoUnoWiFi) tutorial is now on the arduino.cc site.
 
-ESP8266 is a ‘WiFi chip’  often used in combination with Arduino microcontrollers. Classic way is to connect the AVR or other microcontroller with ESP8266 using UART (Serial). The serial connection is then not available for communication with a computer (USB). Modern way of connecting AVR with ESP uses SPI connection.
+ESP8266 is a ‘WiFi chip’  often used in combination with Arduino microcontrollers. Classic way is to connect the AVR or other microcontroller with ESP8266 using UART (Serial). Other way of connecting AVR with ESP uses SPI connection.
 
-Arduino Uno WiFi Developer Edition connects ATmega328 microcontroller with ESP8266 using IO expander SC16IS750 ([here as module](http://sandboxelectronics.com/?product=sc16is750-i2cspi-to-uart-bridge-module)). It is used as additional UART connected to Atmega as I2C device. ESP8266 is connected to SC16IS750 UART to UART. The connection speed is limited with I2C.
+Arduino Uno WiFi Developer Edition connects ATmega328 microcontroller to ESP8266 using additional UART chip SC16IS750 ([here as module](http://sandboxelectronics.com/?product=sc16is750-i2cspi-to-uart-bridge-module)). This additional UART is connected to Atmega as I2C device.
 
 With ESP8266 on board it is desired to use it to write into microcontroller a sketch send ‘over the air’. ‚Over the air‘ or OTA upload means the sketch is send from IDE to the board using WiFi.
 
@@ -94,7 +94,7 @@ This firmware can be installed or reinstalled with [firmware updater with GUI](h
 
 Then version of ESP-link was used for the preinstalled firmware. JeeLabs develops the ESP-link further and it is compatible with Uno WiFi Developer Edition, except of sketch OTA upload.
 
-The library for the AVR side is called EL-link and for the Uno WiFi Developer Edition it must use SC16IS750 interface.
+The library for the AVR side is called EL-link and for the Uno WiFi Developer Edition it must use the SC16IS750 interface.
 
 * [ESP-link firmware GitHub repository](https://github.com/jeelabs/esp-link)
 * [EL-link library GitHub repository](https://github.com/jeelabs/el-client)
@@ -113,8 +113,6 @@ The corresponding library is WiFi Link and it has a familiar API similar to WiFi
 ### SDK firmware
 
 Theoretically it should work. It receives AT commands over serial line. 
-
-Problem is, how to to set slower baud rate default for the ESP after flashing the firmware. Only option to execute that one AT command is to create a 115200 baud connection with external USB TTL adapter like described in section "Burn the firmware using ESP Flash download tool" of the [How to change the firmware of Arduino UNO WiFi](https://www.arduino.cc/en/Guide/ArduinoUnoWiFiChangeFw).
 
 Possible library is WifiEsp over [SC16IS750 object](https://github.com/SandboxElectronics/UART_Bridge), which implements the Serial interface. 
 
@@ -286,7 +284,7 @@ Put the tool executable to a location evaluated by tools.avrdude.network_cmd.
 
 ### Straight serial connection 
 
-On Uno WiFi Dev Ed the standard connection thru SC16IS750 is limited to 19200 baud, which is very slow. There is a way to use a direct Atmega to ESP serial connection at 115200 baud.
+On Uno WiFi Dev Ed the standard connection thru SC16IS750 is limited for unknown reason to 9600 baud, which is very slow. There is a way to use a direct Atmega to ESP serial connection at 115200 baud.
 
 With the serial of Atmega connected to ESP8266 it can’t be used for USB sketch uploading and Serial Monitor as it is the case with other equipment connecting to UART serial connection.
 
