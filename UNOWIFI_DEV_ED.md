@@ -53,13 +53,13 @@ The firmware can be updated or changed. Two things are necessary to prepare Uno 
 
 All firmware binaries available for Uno Wifi Dev Ed can be flashed with esptool. The Arduino IDE plugin for upgrading the preinstalled firmware version installs esptool under the tools folder of the sketch folder - Arduino/tools/UnoWiFi/tool/bin
 
-The connection thru the IO expander limits the speed of flashing. Recommended baudrate is 9600. Other esptool parameters for the Uno WiFi Dev Ed are `-b 9600 write_flash -ff 80m -fm qio -fs 32m` 
+esptool parameters for the Uno WiFi Dev Ed are `-b 9600 write_flash -ff 80m -fm qio -fs 32m` 
+
+(The connection over Atmega with EspRecovery sketch is for some yet unknown reason good for communication with esp8266 bootloader only at 9600 baud.) 
 
 The exe version of the esptool is a packaged version of the python script esptool.py
 
 * [esptool.py GitHub repository and reference](https://github.com/espressif/esptool)
- 
-Warning: don't use the erase command. Without some bootloader in the ESP8266 it could be a problem flashing the firmware of the Uno Wifi Dev Ed. 
  
 ### Firmware as a sketch
  
