@@ -55,7 +55,7 @@ All firmware binaries available for Uno Wifi Dev Ed can be flashed with esptool.
 
 esptool parameters for the Uno WiFi Dev Ed are `-b 9600 write_flash -ff 80m -fm qio -fs 32m` 
 
-(The connection over Atmega with EspRecovery sketch is for some yet unknown reason good for communication with esp8266 bootloader only at 9600 baud.) 
+(The connection over Atmega with EspRecovery sketch can't negotiate a higher baud rate with esp8266 bootloader.) 
 
 The exe version of the esptool is a packaged version of the python script esptool.py
 
@@ -112,7 +112,7 @@ The corresponding library is WiFi Link and it has a familiar API similar to WiFi
 
 ### SDK firmware
 
-Theoretically it should work. It receives AT commands over serial line. 
+Theoretically it should work. It receives AT commands over serial line.
 
 Possible library is WifiEsp over [SC16IS750 object](https://github.com/SandboxElectronics/UART_Bridge), which implements the Serial interface. 
 
@@ -284,13 +284,11 @@ Put the tool executable to a location evaluated by tools.avrdude.network_cmd.
 
 ### Straight serial connection 
 
-On Uno WiFi Dev Ed the standard connection thru SC16IS750 is limited for unknown reason to 9600 baud, which is very slow. There is a way to use a direct Atmega to ESP serial connection at 115200 baud.
+On Uno WiFi Dev Ed here is a way to use a direct Atmega to ESP serial connection at 115200 baud.
 
 With the serial of Atmega connected to ESP8266 it can’t be used for USB sketch uploading and Serial Monitor as it is the case with other equipment connecting to UART serial connection.
 
 Alternative to uploading sketch over USB is OTA upload. Alternative to Serial Monitor is Telnet.
-
-Warning: use firmware which activates the straight serial connection only if you mastered firmware OTA upload.
 
 #### Pin 4
 
