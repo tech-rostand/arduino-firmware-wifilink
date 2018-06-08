@@ -1,3 +1,5 @@
+#include "config.h"
+
 #if defined(ESP_CH_UART)
 
 #include <dfu.h>
@@ -7,10 +9,9 @@
 #include <dfu-internal.h>
 #include <esp8266-serial.h>
 #include <dfu-esp8266.h>
-#include <dfu-avrisp.h>
 #if defined(STAROTTO)
 #include <dfu-stm32.h>
-#elif defined(UNOWIFIDEVED)
+#elif defined(UNOWIFIDEVED) || defined (GENERIC_ESP8266)
 #include <stk500-device.h>
 #include <dfu-stk500.h>
 #endif
@@ -36,15 +37,24 @@ static int _setup_dfu(void)
                 &stm32_dfu_target_ops,
                 &stm32f469bi_device_data,
                 &esp8266_dfu_host_ops);
-  #elif defined(UNOWIFIDEVED)
-  global_dfu = dfu_init(&esp8266_serial_arduino_unowifi_interface_ops,
-                NULL,
-                NULL,
-                serial_release,
-                NULL,
-                &stk500_dfu_target_ops,
-                &atmega328p_device_data,
-                &esp8266_dfu_host_ops);
+#elif defined(UNOWIFIDEVED)
+global_dfu = dfu_init(&esp8266_serial_arduino_unowifi_interface_ops,
+              NULL,
+              NULL,
+              serial_release,
+              NULL,
+              &stk500_dfu_target_ops,
+              &atmega328p_device_data,
+              &esp8266_dfu_host_ops);
+#elif defined(GENERIC_ESP8266)
+global_dfu = dfu_init(&esp8266_serial_arduinouno_hacked_interface_ops,
+              NULL,
+              NULL,
+              serial_release,
+              NULL,
+              &stk500_dfu_target_ops,
+              &atmega328p_device_data,
+              &esp8266_dfu_host_ops);
   #endif
 
   if (!global_dfu) {
@@ -84,9 +94,14 @@ void _handle_Mcu_OTA(void)
     case DFU_ALL_DONE:
       dfu_target_go(global_dfu);
       _finalize_dfu();
+    #if defined(UNOWIFIDEVED) || defined(GENERIC_ESP8266)
+      delay(1000);
+      ESP.reset();
+    #else
       delay(80);
       //open Serial Communication
       Serial.begin(BAUDRATE_COMMUNICATION);
+    #endif
       break;
     case DFU_CONTINUE:
       break;

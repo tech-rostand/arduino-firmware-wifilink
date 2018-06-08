@@ -15,10 +15,21 @@ long previousMillis = 0;        // will store last time LED was updated
 long ap_interval = 50;         //blink interval in ap mode
 IPAddress default_IP(192,168,240,1);  //defaul IP Address
 String HOSTNAME = DEF_HOSTNAME;
+String staticIP_param ;
+String netmask_param;
+String gateway_param;
+String dhcp = "on";
 
 ESP8266WebServer server(80);    //server UI
 
 void setup() {
+
+#if defined(UNOWIFIDEVED)
+  pinMode(4, OUTPUT);
+  digitalWrite(4, 1);
+#endif
+
+  resetMCU(); // reset of the MCU to be in sync
 
   #if defined(ESP_CH_UART)
   _setup_dfu();
@@ -27,11 +38,11 @@ void setup() {
   pinMode(WIFI_LED, OUTPUT);      //initialize wifi LED
   digitalWrite(WIFI_LED, LOW);
   ArduinoOTA.begin();             //OTA ESP
-  initMDNS();
 
   CommunicationLogic.begin();
   SPIFFS.begin();
   initHostname();
+  initMDNS();
   initWebServer();                 //UI begin
   setWiFiConfig();
 
@@ -130,6 +141,14 @@ void setWiFiConfig(){
     }else{
       WiFi.begin(Config.getParam("ssid").c_str());
     }
+    String staticIP = Config.getParam("staticIP").c_str();
+    if(staticIP != ""){
+      dhcp = "off";
+      staticIP_param = staticIP;
+      netmask_param = Config.getParam("netMask").c_str();
+      gateway_param = Config.getParam("gatewayIP").c_str();
+      WiFi.config(stringToIP(staticIP_param), stringToIP(gateway_param), stringToIP(netmask_param));
+    }
   }
 
   #if defined(ESP_CH_SPI)
@@ -137,3 +156,16 @@ void setWiFiConfig(){
   #endif
 
 }
+
+void resetMCU() {
+#if defined(UNOWIFIDEVED_STRAIGHT_SERIAL)
+  digitalWrite(4, 0);
+#endif
+#ifdef MCU_RESET_PIN
+  pinMode(MCU_RESET_PIN, OUTPUT);
+  digitalWrite(MCU_RESET_PIN, LOW);
+  delay(1);
+  digitalWrite(MCU_RESET_PIN, HIGH);
+#endif
+}
+
